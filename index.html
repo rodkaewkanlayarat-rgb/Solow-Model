@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Interactive Solow Growth Model dashboard: steady state, AI adoption scenario, saving-rate comparison and practice question.">
+<meta name="theme-color" content="#1b2436"><meta property="og:title" content="Solow Model"><meta property="og:description" content="Interactive Solow Growth Model dashboard"><meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%88%3C/text%3E%3C/svg%3E"><title>Solow Model</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#1b2436;--card:#232e45;--bd:#38455f;--tx:#e8edf5;--mu:#a9b4c8;--ac:#7cc5d6;--am:#e6c38a;--gr:#8fd1b0;--pk:#e5a3b8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:1100px;margin:0 auto;padding:16px}
+header{border-bottom:1px solid var(--bd);padding:20px 0 16px}
+h1{margin:0;font-size:1.6rem;letter-spacing:.2px}h2{font-size:1.15rem;margin:0 0 10px;color:var(--ac)}
+.sub{color:var(--mu)}.id{display:inline-block;margin-top:8px;padding:4px 12px;border:1px solid var(--ac);border-radius:6px;color:var(--ac);font-weight:600}
+section{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;margin:16px 0}
+.g{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.k{border:1px solid var(--bd);border-radius:8px;padding:12px;background:#1c2538}
+.k small{color:var(--mu);display:block}.k b{font-size:1.4rem;font-variant-numeric:tabular-nums}.k i{font-style:normal;color:var(--gr);font-size:.85rem}
+.k.ai{border-color:var(--am)}.k.ai b{color:var(--am)}
+label{display:block;color:var(--mu);font-size:.9rem}
+input[type=number]{width:100%;background:#1c2538;color:var(--tx);border:1px solid var(--bd);border-radius:6px;padding:6px 8px;font-size:1rem}
+input[type=range]{width:100%;accent-color:var(--ac)}
+button{background:transparent;color:var(--tx);border:1px solid var(--ac);border-radius:6px;padding:9px 14px;font-size:.95rem;cursor:pointer;margin:4px 6px 4px 0}
+button:hover,button.on{background:var(--ac);color:#16202f}button.am{border-color:var(--am)}button.am:hover,button.am.on{background:var(--am)}
+.ch{position:relative;height:320px}.ov{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;min-width:480px}th,td{padding:6px 8px;border-bottom:1px solid var(--bd);text-align:right}th:first-child,td:first-child{text-align:left}th{color:var(--mu);font-weight:600}
+tr.hl td{color:var(--ac)}.note{color:var(--mu);font-size:1rem}.err{color:var(--pk);min-height:1.3em;font-size:.9rem}
+code,.eq{font-family:Georgia,"Times New Roman",serif;font-style:italic;color:#d6e6f2}ul{padding-left:20px;margin:6px 0}
+.ok{color:var(--gr)}.bad{color:var(--pk)}
+
+.q{border:1px solid var(--bd);border-radius:8px;padding:12px;margin:12px 0;background:#1c2538}
+.q textarea{width:100%;min-height:90px;background:#232e45;color:var(--tx);border:1px solid var(--bd);border-radius:6px;padding:8px;font:inherit;resize:vertical}
+.q .a{display:none;margin-top:8px;padding:10px;border-left:3px solid var(--gr);background:#232e45;border-radius:4px}.q .a.show{display:block}
+footer{color:var(--mu);font-size:.85rem;text-align:center;padding:12px 0 24px}
+@media print{button,.q textarea{display:none}body{background:#fff;color:#000}}
+.pe{border-left:3px solid var(--ac);background:#1c2538;padding:10px 14px;border-radius:6px;margin:10px 0}
+.pe b{color:var(--ac)}.d{display:block;font-size:.8rem;color:var(--mu);margin:2px 0 6px}
+.res{display:none;margin-top:10px;padding:12px 14px;border-radius:8px;border:2px solid}
+.res.show{display:block}.res.ok{border-color:#8fd1b0;background:#1f3a33}.res.mid{border-color:#e6c38a;background:#3a3322}.res.no{border-color:#e5a3b8;background:#3a2530}
+.res ul{list-style:none;padding:0;margin:8px 0 0}.res li{margin:4px 0}
+</style></head><body><noscript><p style="padding:16px">Please enable JavaScript to use this interactive model.</p></noscript><div class="w">
+<header><h1>Solow Model</h1>
+<div class="sub">Interactive Solow Growth Model · Student: Kanlayarat Rodkaew</div>
+<div class="id">Student ID 661610024</div></header>
+
+<section><h2>1. What is the Solow model?</h2>
+<p>A simple model of how a country's capital (K: machines, factories) and output (Y) change over time. Each year the country <b>produces</b> <span class="eq">Y = A√K</span>, <b>invests</b> a share s of it (<span class="eq">I = sY</span>), and some capital <b>wears out</b> (<span class="eq">D = δK</span>).</p>
+<div class="pe">If more is invested than wears out, capital grows. If less, it shrinks. When they are equal, the economy settles: the <b>steady state</b>.</div>
+<ul><li><b>A</b> is technology: higher A means the same capital makes more output.</li><li><b>√K</b> means diminishing returns: with A = 2.60, K = 100 gives Y = 26, but K = 400 gives only Y = 52.</li></ul>
+<div class="ov"><table><tr><th>If this goes up</th><th>Capital K</th><th>Why</th></tr>
+<tr><td>Saving rate s</td><td>Up ↑</td><td>More is invested.</td></tr>
+<tr><td>Depreciation δ</td><td>Down ↓</td><td>More wears out.</td></tr>
+<tr><td>Technology A</td><td>Up ↑</td><td>Each unit of capital produces more.</td></tr>
+<tr><td>Initial capital K₀</td><td>No long-run change</td><td>It is only the starting point.</td></tr></table></div>
+<p class="note">Going down does the opposite. Steady state: <span class="eq">K* = (sA/δ)²</span>, <span class="eq">Y* = sA²/δ</span>, <span class="eq">C* = (1−s)Y*</span>. My ID gives s = 0.20 + 4×0.02 = 0.28 and δ = 0.02 + 2×0.002 = 0.024 (last digit 4, second-to-last 2); A = 2.60 and K₀ = 100.</p></section>
+
+<section><h2>2. Choose your parameters</h2><div class="g" id="ctl"></div>
+<div class="err" id="err"></div><div class="pe why"></div>
+<button id="reset">Reset to My Student Parameters</button></section>
+
+<section><h2>3. Where does the economy end up? (steady state)</h2><div class="pe">In the long run the economy stops changing. These are the levels it settles at.</div><div class="g" id="kpi"></div>
+</section>
+
+<section><h2>4. Why does it settle? (investment vs depreciation)</h2><div class="pe why"></div><div class="ch"><canvas id="c1"></canvas></div><p class="note" id="dyn1"></p>
+<div class="pe">Green = new capital built, pink = capital worn out. Left of the dashed line green is higher, so capital grows. Right of it pink is higher, so capital shrinks.</div></section>
+
+<section><h2>5. How the economy gets there over time</h2>
+<label>Simulation horizon: <b id="Tv"></b> periods<input type="range" id="T" min="20" max="500" step="10" value="150"></label>
+<div class="pe why"></div><div class="ch"><canvas id="c2"></canvas></div><p class="note" id="dyn2"></p><div class="ch" style="margin-top:12px"><canvas id="c3"></canvas></div>
+<div class="pe">Capital starts at K₀ and climbs toward K*: fast at first, then slower, then flat.</div></section>
+
+<section><h2>6. What if AI makes technology 20% better?</h2>
+<button class="am" id="ai">Simulate AI Adoption (+20% A)</button>
+<div class="g" id="aik" style="margin-top:10px"></div>
+<div class="ch" id="c4w" style="display:none;margin-top:12px"><canvas id="c4"></canvas></div>
+<div class="pe">Better technology makes every machine more productive, so the economy settles higher. A is squared in the formulas, so +20% in A gives 1.2 × 1.2 = 1.44, which is <b>+44%</b>.</div><p class="note">Model results only, not a prediction for Thailand.</p></section>
+
+<section><h2>7. What if the country saves more?</h2>
+<label style="max-width:260px">Alternative saving rate s<input type="number" id="alt" min="0.01" max="0.9" step="0.01" value="0.40"></label>
+<div class="ov"><table id="st"></table></div><p class="note" id="dyn5"></p>
+<div class="pe">Saving more raises the <b>level</b> of capital and output, but not growth forever: growth only speeds up while moving to the new steady state. Consumption is highest at s = 0.50.</div></section>
+
+<section><h2>8. Compare with the assignment benchmark</h2>
+<button id="bm">Compare with Assignment Benchmark</button>
+<div class="ov" id="bt" style="display:none"><table id="btab"></table></div>
+<p class="note">Benchmark: s = 0.30, δ = 0.02, A = 2.60. Your own values are never changed.</p></section>
+
+<section><h2>9. Summary</h2><ul>
+<li><b>Steady state:</b> where the economy stops changing.</li>
+<li><b>I = D there:</b> new capital exactly replaces worn-out capital.</li>
+<li><b>Better technology:</b> each unit of capital produces more, so K*, Y* and C* are higher.</li>
+<li><b>+20% A gives +44% Y*:</b> Y* = sA²/δ, and 1.2² = 1.44.</li>
+<li><b>Saving more:</b> raises the level, not long-run growth, because of diminishing returns. Only ongoing technological progress sustains growth.</li></ul></section>
+
+<section><h2>10. Final question</h2>
+<p class="note">Type your answer (it is saved automatically in this browser), then open the answer key to check. The answer key uses your student parameters (s = 0.28, δ = 0.024, A = 2.60).</p>
+<div id="qa"></div></section>
+
+<footer>Solow Growth Intelligence · Student ID 661610024 · Model-based analysis for educational use only.</footer></div>
+<script>
+const DEF={s:.28,d:.024,A:2.6,K0:100},BM={s:.3,d:.02,A:2.6};
+const CFG=[['s','Saving rate s',.01,.9,.01],['d','Depreciation rate δ',.005,.1,.001],['A','Technology A',.5,6,.01],['K0','Initial capital K₀',1,5000,1]];
+const DS={s:'Share of output the country saves',d:'Share of capital that wears out each year',A:'How productive the technology is',K0:'Capital the economy starts with'};const p={...DEF};let ai=false,bm=false;
+const $=id=>document.getElementById(id);
+const f=x=>x.toLocaleString('en-US',{minimumFractionDigits:3,maximumFractionDigits:3});
+const ss=(s,d,A)=>{const K=(s*A/d)**2,Y=s*A*A/d;return{K,Y,C:(1-s)*Y,I:s*Y,D:d*K}};
+const sim=(s,d,A,K0,T)=>{const a=[K0];for(let t=0;t<T;t++){const k=a[t];a.push(Math.max(k+s*A*Math.sqrt(k)-d*k,0))}return a};
+const pc=(a,b)=>(a/b-1)*100,sg=x=>(x>=0?'+':'')+f(x);
+const aiA=()=>1.2*p.A;
+CFG.forEach(([k,n,mn,mx,st])=>{const d=document.createElement('div');d.className='k';
+d.innerHTML=`<label>${n}<span class="d">${DS[k]}</span><input type="number" id="n_${k}" min="${mn}" max="${mx}" step="${st}"></label><input type="range" id="r_${k}" min="${mn}" max="${mx}" step="${st}" aria-label="${n}">`;$('ctl').appendChild(d);
+const set=(v,msg)=>{let x=parseFloat(v);if(!isFinite(x)){$('err').textContent=n+': invalid number, value kept.';x=p[k]}else if(x<mn||x>mx){$('err').textContent=`${n} must be between ${mn} and ${mx}; adjusted.`;x=Math.min(mx,Math.max(mn,x))}else $('err').textContent='';if(x!==p[k]&&!(last&&!last.reset&&last.k===k))last={k,old:{...p}};p[k]=x;sync();render()};
+$('n_'+k).onchange=e=>set(e.target.value);$('r_'+k).oninput=e=>set(e.target.value)});
+const sync=()=>CFG.forEach(([k])=>{$('n_'+k).value=p[k];$('r_'+k).value=p[k]});
+$('reset').onclick=()=>{last={reset:1,old:{...p}};Object.assign(p,DEF);$('err').textContent='';sync();render()};
+$('ai').onclick=()=>{ai=!ai;render()};$('bm').onclick=()=>{bm=!bm;render()};
+$('T').oninput=render;$('alt').onchange=e=>{let v=parseFloat(e.target.value);if(!isFinite(v))v=.4;v=Math.min(.9,Math.max(.01,v));e.target.value=v;render()};
+const kp=(l,v,extra)=>`<div class="k"><small>${l}</small><b>${f(v)}</b>${extra?`<br><i>${extra}</i>`:''}</div>`;
+const grid='#38455f',tick='#a9b4c8';
+const vl={id:'vl',afterDatasetsDraw(c,_,o){if(o.x==null)return;const x=c.scales.x.getPixelForValue(o.x),a=c.chartArea;if(x<a.left||x>a.right)return;const g=c.ctx;g.save();g.strokeStyle='#e6c38a';g.setLineDash([5,4]);g.beginPath();g.moveTo(x,a.top);g.lineTo(x,a.bottom);g.stroke();g.fillStyle='#e6c38a';g.fillText('K* = '+f(o.x),Math.min(x+4,a.right-90),a.top+12);g.restore()}};
+const mk=(id,xt,yt,lin)=>new Chart($(id),{type:'line',data:{datasets:[]},plugins:[vl],options:{responsive:true,maintainAspectRatio:false,animation:false,parsing:false,interaction:{mode:'index',intersect:false},
+plugins:{legend:{labels:{color:'#e8edf5'}},vl:{},tooltip:{callbacks:{title:i=>(lin?'K = ':'t = ')+f(i[0].parsed.x),label:i=>i.dataset.label+': '+f(i.parsed.y)}}},
+scales:{x:{type:'linear',title:{display:true,text:xt,color:tick},ticks:{color:tick},grid:{color:grid}},y:{title:{display:true,text:yt,color:tick},ticks:{color:tick},grid:{color:grid},beginAtZero:true}}}});
+const L=(label,data,color,dash)=>({label,data,borderColor:color,backgroundColor:color,borderDash:dash||[],pointRadius:0,borderWidth:2,tension:0});
+const c1=mk('c1','Capital stock K','Output / investment / depreciation (units per period)',true),c2=mk('c2','Time t (periods)','Capital stock K_t'),c3=mk('c3','Time t (periods)','Output Y_t');
+c3.options.plugins.vl={};
+const c4=new Chart($('c4'),{type:'bar',data:{labels:['K*','Y*','C*'],datasets:[]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:'#e8edf5'}},tooltip:{callbacks:{label:i=>i.dataset.label+': '+f(i.parsed.y)}}},scales:{x:{ticks:{color:tick},grid:{color:grid}},y:{ticks:{color:tick},grid:{color:grid},title:{display:true,text:'Level (units)',color:tick}}}}});
+let last=null;
+const dl=(v,key)=>{if(!last)return'';const c=pc(v,ss(last.old.s,last.old.d,last.old.A)[key]);return Math.abs(c)<1e-9?'no change vs before':(c>0?'▲ ':'▼ ')+sg(c)+'% vs before'};
+function whyText(){
+if(!last)return'Move a slider and this box tells you what the change means.';
+const o=last.old,so=ss(o.s,o.d,o.A),sn=ss(p.s,p.d,p.A);
+const eff=`<br>Long run: K* ${f(so.K)} → ${f(sn.K)}, Y* ${f(so.Y)} → ${f(sn.Y)}, C* ${f(so.C)} → ${f(sn.C)}.`;
+if(last.reset)return'<b>Reset</b> to your student values.'+eff;
+const k=last.k;if(p[k]===o[k])return'<b>Back to the starting value.</b> Nothing has changed overall.';
+const up=p[k]>o[k],v=(a,b)=>up?a:b,nm={s:'saving rate',d:'depreciation rate',A:'technology A',K0:'initial capital'}[k];
+const why={s:v('More output is invested, so more capital is built.','Less output is invested, so less capital is built.'),d:v('Capital wears out faster, so less is left.','Capital wears out more slowly, so more is left.'),A:v('Each unit of capital produces more, so more is invested.','Each unit of capital produces less, so less is invested.'),K0:'Only the starting point changes, not where the economy ends up.'}[k];
+return `<b>${v('Raised','Lowered')} ${nm} (${o[k]} → ${p[k]}).</b> ${why}`+(k==='K0'?'':eff)}
+function explainAll(b,path,Ta,ra,alt){
+const {s,d,A,K0}=p,W=whyText();document.querySelectorAll('.why').forEach(e=>e.innerHTML=W);
+const I0=s*A*Math.sqrt(K0),D0=d*K0,t=path.findIndex(k=>Math.abs(k-b.K)/b.K<=.05);
+$('dyn1').innerHTML=`<b>Your values:</b> at K₀ = ${f(K0)}, investment is ${f(I0)} and depreciation is ${f(D0)}, so capital ${I0>D0?'grows':'shrinks'}. The lines meet at K* = ${f(b.K)}.`;
+$('dyn2').innerHTML=`<b>Your values:</b> capital goes from ${f(K0)} toward K* = ${f(b.K)}. ${t>=0?(t===0?'It starts within 5% of K*.':`It gets within 5% after ${t} periods.`):'It is not within 5% of K* yet; try a longer horizon.'}`;
+$('dyn5').innerHTML=`<b>Your values:</b> s = ${s}. ${s<.5?'Raising s would raise both Y* and C*.':'Raising s further would raise Y* but lower C*.'} At s = ${alt}: Y* ${sg(pc(ra.Y,b.Y))}%, C* ${sg(pc(ra.C,b.C))}%.`}
+function render(){
+const {s,d,A,K0}=p,b=ss(s,d,A),Ta=+$('T').value;$('Tv').textContent=Ta;
+$('kpi').innerHTML=kp('Capital K* (long-run capital stock)',b.K,dl(b.K,'K'))+kp('Output Y* (long-run production)',b.Y,dl(b.Y,'Y'))+kp('Consumption C* (output not saved)',b.C,dl(b.C,'C'))+kp('Investment I* = sY* (new capital)',b.I)+kp('Depreciation D* = δK* (capital worn out)',b.D);
+const Kmax=Math.max(1.6*b.K,K0*1.1),N=120,pts=[],aA=aiA(),ba=ss(s,d,aA);
+const Y=[],I=[],D=[],IA=[];for(let i=0;i<=N;i++){const K=Kmax*i/N;Y.push({x:K,y:A*Math.sqrt(K)});I.push({x:K,y:s*A*Math.sqrt(K)});D.push({x:K,y:d*K});IA.push({x:K,y:s*aA*Math.sqrt(K)})}
+c1.data.datasets=[L('Output Y = A√K',Y,'#7cc5d6'),L('Investment I = sA√K',I,'#8fd1b0'),L('Depreciation D = δK',D,'#e5a3b8')];
+if(ai)c1.data.datasets.push(L('AI investment (A×1.2)',IA,'#e6c38a',[6,4]));
+c1.options.plugins.vl.x=b.K;c1.update('none');
+const path=sim(s,d,A,K0,Ta),xy=path.map((k,t)=>({x:t,y:k})),yy=path.map((k,t)=>({x:t,y:A*Math.sqrt(k)}));
+const line=(v)=>[{x:0,y:v},{x:Ta,y:v}];
+c2.data.datasets=[L('Capital K_t',xy,'#7cc5d6'),L('Steady state K*',line(b.K),'#e6c38a',[6,4])];
+c3.data.datasets=[L('Output Y_t = A√K_t',yy,'#8fd1b0'),L('Steady state Y*',line(b.Y),'#e6c38a',[6,4])];
+if(ai){const pa=sim(s,d,aA,K0,Ta);c2.data.datasets.push(L('Capital K_t (AI)',pa.map((k,t)=>({x:t,y:k})),'#e5a3b8'),L('K* (AI)',line(ba.K),'#e5a3b8',[6,4]));c3.data.datasets.push(L('Output Y_t (AI)',pa.map((k,t)=>({x:t,y:aA*Math.sqrt(k)})),'#e5a3b8'))}
+c2.update('none');c3.update('none');
+$('ai').classList.toggle('on',ai);$('ai').textContent=ai?'AI Adoption ON — click to return to baseline':'Simulate AI Adoption (+20% A)';
+$('c4w').style.display=ai?'block':'none';
+if(ai){const r=(l,k,a,bb)=>`<div class="k ai"><small>${l}</small><b>${f(a)}</b><br><small>Baseline ${f(bb)}</small><i>${sg(a-bb)} (${sg(pc(a,bb))}%)</i></div>`;
+$('aik').innerHTML=`<div class="k ai"><small>A_AI = 1.2A</small><b>${f(aA)}</b><br><small>Baseline ${f(A)}</small></div>`+r('K*_AI','K',ba.K,b.K)+r('Y*_AI','Y',ba.Y,b.Y)+r('C*_AI','C',ba.C,b.C);
+c4.data.datasets=[{label:'Baseline',data:[b.K,b.Y,b.C],backgroundColor:'#7cc5d6'},{label:'AI scenario',data:[ba.K,ba.Y,ba.C],backgroundColor:'#e6c38a'}];c4.update('none')}
+else $('aik').innerHTML='<p class="note">Scenario off: showing baseline only.</p>';
+const alt=parseFloat($('alt').value)||.4,rows=[...new Set([.1,.3,.5,.7,.9,s,alt])].sort((a,b)=>a-b);
+let h='<tr><th>s</th><th>K*</th><th>Y*</th><th>C*</th></tr>';
+rows.forEach(v=>{const r=ss(v,d,A);h+=`<tr class="${v===s||v===alt?'hl':''}"><td>${v}${v===s?' (current)':''}${v===alt&&v!==s?' (alternative)':''}</td><td>${f(r.K)}</td><td>${f(r.Y)}</td><td>${f(r.C)}</td></tr>`});
+const ra=ss(alt,d,A);h+=`<tr><td>Alt vs current</td><td>${sg(pc(ra.K,b.K))}%</td><td>${sg(pc(ra.Y,b.Y))}%</td><td>${sg(pc(ra.C,b.C))}%</td></tr>`;$('st').innerHTML=h;
+$('bt').style.display=bm?'block':'none';$('bm').classList.toggle('on',bm);
+if(bm){const q=ss(BM.s,BM.d,BM.A);const row=(n,a,c)=>`<tr><td>${n}</td><td>${f(a)}</td><td>${f(c)}</td><td>${sg(c-a)} (${sg(pc(c,a))}%)</td></tr>`;
+$('btab').innerHTML=`<tr><th></th><th>Mine (s=${s}, δ=${d}, A=${A})</th><th>Benchmark (s=.30, δ=.02, A=2.60)</th><th>Benchmark − mine</th></tr>`+row('K*',b.K,q.K)+row('Y*',b.Y,q.Y)+row('C*',b.C,q.C)}
+explainAll(b,path,Ta,ra,alt)}
+
+(function qa(){
+const P=ss(.28,.024,2.6),Q=ss(.28,.024,3.12);
+const Y0=P.Y,YA=ss(.28,.024,3.12).Y,YS=ss(.28*1.2,.024,2.6).Y;
+const Qs=[
+['Answer in 3–4 sentences: when <b>A increases by 20%</b> compared with <b>s increasing by 20%</b>, by what percentage does <i>Y*</i> change, and how do the two differ? In the Solow model, what makes output keep growing in the long run, and why?',
+`If A rises by 20%, Y* rises by <b>44%</b> (from ${f(Y0)} to ${f(YA)}), but if s rises by 20%, Y* rises by only <b>20%</b> (from ${f(Y0)} to ${f(YS)}). The reason is that Y* = sA²/δ, so A is squared (1.2² = 1.44) while s enters only once. In the basic Solow model, neither more saving nor a one-time rise in A keeps output growing forever, because diminishing returns to capital make growth fade out at the steady state. Only continuous technological progress (A rising over time) can sustain long-run growth.`]];
+const CK=[[
+{l:'A +20% raises Y* by about 44%',h:'Say how much Y* rises when A rises by 20% (hint: 1.2 × 1.2).',t:x=>/\b44\b/.test(x)},
+{l:'s +20% raises Y* by only about 20%',h:'Say how much Y* rises when s rises by 20%, and compare it with A.',t:x=>/(\bs\b|saving|ออม)[^.\n]{0,100}(\b20\b|proportional|linear|เชิงเส้น)/i.test(x)||(x.match(/\b20\s*(%|percent|เปอร์เซ็นต์)/gi)||[]).length>=2},
+{l:'Explains why they differ (A is squared, s is not)',h:'Explain the difference using the formula Y* = sA²/δ.',t:x=>/squar|\^\s*2|²|1\.44|กำลังสอง|ยกกำลัง|quadratic/i.test(x)},
+{l:'Names continuous technological progress as the source of long-run growth',h:'Say what can keep output growing in the long run (not just saving more).',t:x=>/(continu|ongoing|sustain|persistent|ต่อเนื่อง|เรื่อยๆ)[^.\n]{0,80}(technolog|progress|innovat|\bA\b|เทคโนโลยี)|(technolog|progress|innovat|เทคโนโลยี)[^.\n]{0,60}(continu|ongoing|sustain|keeps?|over time|ต่อเนื่อง|เรื่อยๆ|ตลอด)|\bA\b[^.\n]{0,40}(over time|continu|ongoing)/i.test(x)},
+{l:'Gives the reason (diminishing returns, growth stops at the steady state)',h:'Say why growth stops without technological progress.',t:x=>/diminishing|decreasing returns|stops? growing|no (more |further )?growth|steady.state|fades?|ผลตอบแทน.{0,12}ลด|หยุดโต|ดุลยภาพ/i.test(x)}]];
+function grade(txt,items,box){
+if(!items||txt.trim().length<60){box.className='res show no';box.innerHTML='<b>Please write a fuller answer first</b> (3–4 sentences), then submit.';return}
+const r=items.map(c=>c.t(txt)),n=r.filter(Boolean).length;
+const [cls,head]=n>=4?['ok','✓ Correct! Your answer covers the key points.']:n===3?['mid','Almost there. A few key points are missing.']:['no','Not yet. Check the missing points below.'];
+box.className='res show '+cls;
+box.innerHTML=`<b>${head}</b> (${n}/${items.length} key points)<ul>`+items.map((c,j)=>`<li>${r[j]?'✓ '+c.l:'✗ <span style="opacity:.85">'+c.h+'</span>'}</li>`).join('')+'</ul><small>This is an automatic keyword check, so different wording may be marked as missing. Compare with the answer key to be sure.</small>'}
+let saved={};try{saved=JSON.parse(localStorage.getItem('solow_ans')||'{}')}catch(e){}
+const root=$('qa');
+Qs.forEach((q,i)=>{const d=document.createElement('div');d.className='q';
+d.innerHTML=`${q[0]}<textarea aria-label="Your answer" placeholder="Type your answer here..."></textarea><button class="sub">Submit answer</button><div class="res" role="status" aria-live="polite"></div><button class="tg">Show / hide answer</button><div class="a"><b>Answer key:</b><br>${q[1]}</div>`;
+const t=d.querySelector('textarea'),a=d.querySelector('.a');t.value=saved[i]||'';
+t.oninput=()=>{saved[i]=t.value;try{localStorage.setItem('solow_ans',JSON.stringify(saved))}catch(e){}};
+d.querySelector('.tg').onclick=()=>a.classList.toggle('show');d.querySelector('.sub').onclick=()=>grade(t.value,CK[i],d.querySelector('.res'));root.appendChild(d)});
+})();
+sync();render();
+</script></body></html>
